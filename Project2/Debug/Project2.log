@@ -1,4 +1,5 @@
 ﻿  Source.cpp
 c:\users\tdnguyen1\documents\visual studio 2017\projects\project2\project2\uilib.h(27): warning C4838: conversion from 'int' to 'SHORT' requires a narrowing conversion
+c:\users\tdnguyen1\documents\visual studio 2017\projects\project2\project2\source.cpp(311): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Project2.vcxproj -> C:\Users\tdnguyen1\Documents\Visual Studio 2017\Projects\Project2\Debug\Project2.exe
   Project2.vcxproj -> C:\Users\tdnguyen1\Documents\Visual Studio 2017\Projects\Project2\Debug\Project2.pdb (Partial PDB)

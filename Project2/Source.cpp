@@ -10,18 +10,20 @@
 #include <ctime>
 #include "uilib.h"
 #include <random>
-
-
 using namespace std;
+
 #define UP 1072 
 #define DOWN 1080 
 #define LEFT  1075
-#define RIGHT 1077 
+#define RIGHT 1077
+#define FRAMETOP 3
+#define FRAMEBOTTOM 15
+#define FRAMELEFT 3
+#define FRAMERIGHT 43
 bool ckUp = false;
 bool ckDown = false;
 bool ckLeft = false;
 bool ckRight = false;
-
 struct point {
 	int x;
 	int y;
@@ -97,49 +99,24 @@ void Delete_Tail(List &l) {
 	l.size--;
 
 }
-void draw_frame_top() {
-	int x = 10, y = 1;
-	while (x<50) {
-		gotoXY(x, y);
-		cout << "+";
-		x++;
-	}
-}
-void draw_frame_left() {
-	int x = 10, y = 1;
-	while (y<21) {
-		gotoXY(x, y);
-		cout << "+";
-		y++;
-
-
-	}
-}
-void draw_frame_right() {
-	int x = 50, y = 1;
-	while (y<21) {
-		gotoXY(x, y);
-		cout << "+";
-		y++;
-
-
-	}
-}
-void draw_frame_bottom() {
-	int x = 10, y = 20;
-	while (x<50) {
-		gotoXY(x, y);
-		cout << "+";
-		x++;
-
-
-	}
-}
 void draw_frames() {
-	draw_frame_top();
-	draw_frame_bottom();
-	draw_frame_right();
-	draw_frame_left();
+	for (int i = 2; i < 40; i++) {
+		gotoXY(i, 5);
+		cout << (char)220;
+	}
+	for (int i = 2; i <= 39; i++) {
+		gotoXY(i, 15);
+		cout << (char)223;
+	}
+	for (int i = 6; i <= 14; i++) {
+		gotoXY(2, i);
+		cout << (char)221;
+	}
+	for (int i = 6; i <= 14; i++) {
+		gotoXY(39, i);
+		cout << (char)222;
+
+	}
 }
 int Random(int a, int b)
 {
@@ -149,7 +126,7 @@ int Random(int a, int b)
 	return distr(eng);
 }
 void init_snake(List &l) {
-	int x = 15, y = 2;
+	int x = 15, y = 8;
 	while (x>10)
 	{
 		Point *p = Create_Point(x, y);
@@ -166,15 +143,13 @@ void show_snake(List l) {
 		if (p ==l.pHead) {
 		
 			gotoXY(p->x, p->y);
-			cout << (char)232;
+			cout << (char)233;
 		}
 		else
-		{
-	
+		{	
 			gotoXY(p->x, p->y);
-			cout << "o";
+			cout << (char)229;
 		}
-
 	}
 	
 }
@@ -332,15 +307,29 @@ void event_move(int &input) {
 	int key = inputKey();
 	input = key;
 }
-void wait(int seconds)
-{
-	clock_t endwait;
-	endwait = clock() + seconds * CLOCKS_PER_SEC;
-	while (clock() < endwait) {}
+Prd poin_random() {
+	srand(time(NULL));
+	int x = 15 + 1 + rand() % (39 - 15 - 1);
+	int y = 5 + 1 + rand() % (15 - 5 - 1);
+	Prd prd;
+	prd.x = x;
+	prd.y = y;
+	gotoXY(x, y);
+	cout << "$";
+	return prd;
+
+}
+bool check_coordinate_point(List &l,Prd prd) {
+	if (l.pHead->x == prd.x && l.pHead->y == prd.y) {
+		return true;
+	}
+	else {
+		return false;
+	}
+
+
 }
 int main() {
-
-	
 	List l;
 	Create_List(l);
 	init_snake(l);
@@ -348,19 +337,20 @@ int main() {
 	draw_frames();
 	int keyInput = RIGHT;
 	int tX=0, tY=0;
-	while (l.pHead->x < 50 && l.pHead->y < 20) 
-	{
-		gotoXY(tX, tY);
-		cout << " ";
-		tX = Random(11, 49);
-		tY = Random(3, 19);
-		gotoXY(tX,tY);
-		cout << "0";
-	
+	Prd prd = poin_random();
+
+	while (l.pHead->x < 39 && l.pHead->y < 15 && l.pHead ->y>5) 
+	{	
 		direction(l, keyInput,l.size);
 		show_snake(l);
-		Sleep(300);
-
+		if (check_coordinate_point(l, prd)) {
+			Point * p = Create_Point(0, 0);
+			Add_Tail(l, p);
+			prd = poin_random();
+			
+			
+		}
+		Sleep(50);
 		if (_kbhit()) {
 			char c = _getch();
 			if (c == 's') {
